@@ -2,3 +2,5 @@ Link to super helpful... how to start a github repo (except say main not master)
 
 To start virtual enviroment: name of env\Scripts\activate
 To create virtual env: python -m venv my_env
+
+Documentation that I used for HuggingFace to get that working: https://huggingface.co/docs/datasets/en/quickstart
