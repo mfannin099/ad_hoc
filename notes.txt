@@ -1,0 +1,4 @@
+Link to super helpful... how to start a github repo (except say main not master): https://stackoverflow.com/questions/46877667/how-to-add-a-new-project-to-github-using-vs-code
+
+To start virtual enviroment: name of env\Scripts\activate
+To create virtual env: python -m venv my_env
