@@ -1,2 +1,3 @@
 hugging_face_test/.venv/
 google_books_api/.env
+google_books_api/book_env
