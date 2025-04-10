@@ -51,6 +51,11 @@ print(final_books_df)
 
 
 ## Next steps here:
+
+## Before that.... Make seperate project (Repo) for this
+## Need to really make a main.py & add api call to utils so that it is only called on the first time
+## Cache the results pretty much (getting tired of waiting lol)
+
 ## Clean up full title + description to create a bag of words
 ## In order to create some sort of "optimal Query" to call into Google Book API
 ## From that Google API call... distill from that n number of returned books to get the handful that are most relevant
