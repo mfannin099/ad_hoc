@@ -50,7 +50,8 @@ titles_l = [
     "The Fourth Turning An American Prophecy What the cycles of history tell us about Americas nrxt Rendezvous with Destiny",
     "The Ten Day MBA",
     "Humor, Seriously",
-    "How the World Ran out of Everything Inside the Global Supply Chain"
+    "How the World Ran out of Everything Inside the Global Supply Chain",
+    "The Great Game of Business The Only Sensible Way to Run a Company"
 
 ] 
 
@@ -66,6 +67,7 @@ authors_l = [
     "William Strauss & Neil Howe",
     "Steven Silbiger",
     "Jennifer Aaker & Naomi Bagdonas",
-    "Peter S. Goodman"
+    "Peter S. Goodman",
+    "Jack Stack"
 
 ]
