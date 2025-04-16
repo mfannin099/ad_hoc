@@ -42,7 +42,7 @@
         <div style="width: 45%; text-align: center;">
             <h3>Your Books List:</h3>
             <ul>
-                {% for entry in book_list %}
+                {% for entry in book_list | reverse %}
                     <li><strong>{{ entry }}</strong></li>
                 {% endfor %}
             </ul>
@@ -51,7 +51,7 @@
         <div style="width: 45%; text-align: center;">
             <h3>Your Authors List:</h3>
             <ul>
-                {% for entry in author_list %}
+                {% for entry in author_list | reverse %}
                     <li>{{ entry }}</li>
                 {% endfor %}
             </ul>
