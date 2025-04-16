@@ -1,18 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Recommendation System</title>
+    <title>Book Input</title>
 </head>
 <body>
-    <h2>Please Enter Book Titles and Authors that you have Read</h2>
-    <form method="POST">
-        <label for="book">Book Title:</label><br>
-        <input type="text" id="book" name="book" required><br><br>
 
-        <label for="author">Author:</label><br>
-        <input type="text" id="author" name="author" required><br><br>
+    <div style="text-align: center;">
+        <h2>Welcome to Book Recommendation System</h2>
+    </div>
 
-        <input type="submit" value="Submit">
-    </form>
+    <!-- Form Section -->
+    <div style="max-width: 600px; margin: 0 auto;">
+        <form method="POST">
+            <fieldset>
+                <legend><strong>Enter Book and Author Details:</strong></legend>
+                <label for="book">Book Title:</label><br>
+                <input type="text" id="book" name="book" required><br><br>
+
+                <label for="author">Author:</label><br>
+                <input type="text" id="author" name="author" required><br><br>
+
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+    </div>
+
+    <!-- Display Submitted Book and Author -->
+    {% if book and author %}
+        <hr>
+        <div style="text-align: center;">
+            <h3>✅ You Just Entered:</h3>
+            <p><strong>Book:</strong> {{ book }}</p>
+            <p><strong>Author:</strong> {{ author }}</p>
+        </div>
+    {% endif %}
+
+    <hr>
+
+    <!-- Books and Authors Lists side by side -->
+    <div style="display: flex; justify-content: space-evenly; max-width: 600px; margin: 0 auto;">
+        <div style="width: 45%; text-align: center;">
+            <h3>Your Books List:</h3>
+            <ul>
+                {% for entry in book_list %}
+                    <li><strong>{{ entry }}</strong></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div style="width: 45%; text-align: center;">
+            <h3>Your Authors List:</h3>
+            <ul>
+                {% for entry in author_list %}
+                    <li>{{ entry }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
 </body>
 </html>
