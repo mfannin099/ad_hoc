@@ -36,6 +36,17 @@ def homepage():
         
     return render_template('index.html', book=book, author=author, book_list=book_list, author_list=author_list)
 
+@app.route('/delete', methods=['POST'])
+def delete_entry():
+    index = int(request.form.get('index'))  # Get the index of the entry to delete
+
+    if 0 <= index < len(book_list):
+        del book_list[index]
+        del author_list[index]
+        save_to_files(book_list, author_list)
+
+    return redirect('/')
+
 @app.route('/another_page')
 def another_page():
     return "<h2>This is another page</h2>"
