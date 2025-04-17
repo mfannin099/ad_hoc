@@ -47,6 +47,23 @@ def delete_entry():
 
     return redirect('/')
 
+@app.route('/edit', methods=['GET', 'POST'])
+def edit_entry():
+    index = int(request.values.get('index'))
+
+    if request.method == 'POST':
+        updated_book = request.form['book']
+        updated_author = request.form['author']
+        book_list[index] = updated_book
+        author_list[index] = updated_author
+        save_to_files(book_list, author_list)
+        return redirect('/')
+    
+    # GET request — load current values
+    current_book = book_list[index]
+    current_author = author_list[index]
+    return render_template('edit.html', index=index, book=current_book, author=current_author)
+
 @app.route('/another_page')
 def another_page():
     return "<h2>This is another page</h2>"
