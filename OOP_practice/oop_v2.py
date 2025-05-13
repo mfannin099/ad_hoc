@@ -45,14 +45,16 @@ class Career():
     def review_progress(self):
         print(f"Career Path for {self.employee.name}")
         print(f"Start Title: {self.promotions[0]}")
-        # for idx, (title, salary) in enumerate(self.promotions):
-        #     print(f"  Promotion {idx + 1}: {title}, Salary: {salary}")
         print(f"Current Title: {self.promotions[-1]}")
+        print(f"Title Progression: {self.promotions}")
         print(f"Years of Tenure: {self.tenure_history}")
         print(f"Salary History: {self.salary_history}")
 
 
 
+def simulate_year(employee, raise_amount=None):
+    employee.get_raise(raise_amount)
+    employee.year_of_tenure()
 
 
 
@@ -61,33 +63,26 @@ employee1 = Employee("bob", 22, "analyst",100000, 2017)
 career1 = Career(employee1)
 print(employee1)
 
-employee1.get_raise()
-employee1.year_of_tenure()
-
-employee1.get_raise()
-employee1.year_of_tenure()
+simulate_year(employee1)
+simulate_year(employee1)
 
 ## After Promotion/Raise
 employee1.change_position("senior analyst")
-employee1.get_raise(10000)
-employee1.year_of_tenure()
+simulate_year(employee1, 10000)
 
-employee1.get_raise()
-employee1.year_of_tenure()
-
-employee1.get_raise()
-employee1.year_of_tenure()
-
-employee1.get_raise()
-employee1.year_of_tenure()
-
-employee1.get_raise()
-employee1.year_of_tenure()
+simulate_year(employee1)
+simulate_year(employee1)
+simulate_year(employee1)
+simulate_year(employee1)
 
 ## After Promotion/Raise
 employee1.change_position("data scientist")
-employee1.get_raise(25000)
-employee1.year_of_tenure()
+simulate_year(employee1, 25000)
+
+simulate_year(employee1)
+simulate_year(employee1, 15000)
+employee1.change_position("senior data scientist")
+
 
 
 
@@ -96,6 +91,3 @@ career1.review_progress()
 
 
 
-
-
-# print("Total employees:", Employee.get_employee_count())
