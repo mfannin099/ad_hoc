@@ -2,4 +2,4 @@ hugging_face_test/.venv/
 google_books_api/.env
 google_books_api/book_env
 .venv/
-data/openpowerlifting-latest/openpowerlifting-2025-05-03-c77c7449.csv
+data/
