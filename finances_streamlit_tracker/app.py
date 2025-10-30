@@ -28,6 +28,7 @@ if uploaded_file is not None:
     df["Transaction Date"] = pd.to_datetime(df["Transaction Date"], errors="coerce")
     df['Amount'] = df['Amount'].abs()
     df['Was Venmoed'] = ' '
+    df["Split Count"] = df.get("Split Count", 1)
 
     # End Manupulation of dataset
 
@@ -51,10 +52,40 @@ if uploaded_file is not None:
             "Was Venmoed",
             help="Mark if this transaction was reimbursed via Venmo",
             default=False
-        )
+        ),
+        "Split Count": st.column_config.NumberColumn(
+            "Split Count",
+            help="Number of people you split this purchase with",
+            min_value=0,
+            max_value=10,
+            step=1,
+            format="%d",
+            ),
     },
     hide_index=True, use_container_width=True
 )
+    
+    
+    edited_df["Amount Venmoed"] = edited_df["Amount"] * (edited_df["Split Count"] - 1) / edited_df["Split Count"]
+    # Fixing the type of Was Venmoed columb so that it can be used in metrics
+    edited_df["Was Venmoed"] = edited_df["Was Venmoed"].apply(lambda x: True if str(x).strip().lower() == "true" else False)
+
+    # Avoid division by zero
+    edited_df["Split Count"] = edited_df["Split Count"].replace(0, 1)
+
+    edited_df["Amount Venmoed"] = edited_df["Amount"] * (edited_df["Split Count"] - 1) / edited_df["Split Count"]
+    edited_df.loc[~edited_df["Was Venmoed"], "Amount Venmoed"] = 0
+
+    # Filter only venmoed transactions
+    venmoed_df = edited_df[edited_df["Was Venmoed"] == True]
+
+    # Only display if there are any Venmoed transactions
+    if not venmoed_df.empty:
+        st.subheader("💸 Venmoed Transactions")
+        st.dataframe(
+            venmoed_df[["Category", "Amount", "Split Count", "Amount Venmoed"]],
+            use_container_width=True,
+        )
 
     # Note under the table
 
@@ -72,7 +103,7 @@ if uploaded_file is not None:
     with col2:
         st.metric("Sum of Transactions", f"${df['Amount'].sum():,.2f}")
     with col3:
-        edited_df["Was Venmoed"] = edited_df["Was Venmoed"].apply(lambda x: True if str(x).strip().lower() == "true" else False)
+        
         num_venmoed = edited_df["Was Venmoed"].sum()
 
         # Display the metric
