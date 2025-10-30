@@ -27,6 +27,9 @@ if uploaded_file is not None:
     df = df[df['Type'] == "Sale"]
     df["Transaction Date"] = pd.to_datetime(df["Transaction Date"], errors="coerce")
     df['Amount'] = df['Amount'].abs()
+    df['Was Venmoed'] = ' '
+
+    # End Manupulation of dataset
 
     # Allow User to pick how data is sorted
     sort_options = [col for col in ["Category", "Amount", "Transaction Date"] if col in df.columns]
@@ -40,10 +43,37 @@ if uploaded_file is not None:
         ascending=(sort_order == "Ascending")
     )
 
-    # Allow users to edit
-    edited_df = st.data_editor(df, use_container_width=True)
+    # Display dataframe that users can edit
+    edited_df = st.data_editor(
+    df,
+    column_config={
+        "Was Venmoed": st.column_config.CheckboxColumn(
+            "Was Venmoed",
+            help="Mark if this transaction was reimbursed via Venmo",
+            default=False
+        )
+    },
+    hide_index=True, use_container_width=True
+)
 
     # Note under the table
 
     st.markdown("**Note:** Possible categories for transactions include:")
     st.markdown("• " + "\n• ".join(cc_categories))
+
+    st.divider() 
+    st.write("")  
+
+    # Begin some Metrics
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric("Number of Purchases", len(edited_df))
+    with col2:
+        st.metric("Sum of Transactions", f"${df['Amount'].sum():,.2f}")
+    with col3:
+        edited_df["Was Venmoed"] = edited_df["Was Venmoed"].apply(lambda x: True if str(x).strip().lower() == "true" else False)
+        num_venmoed = edited_df["Was Venmoed"].sum()
+
+        # Display the metric
+        st.metric("Number of Purchases Venmoed For", value=int(num_venmoed))
