@@ -39,6 +39,7 @@ if uploaded_file is not None:
         by=sort_by,
         ascending=(sort_order == "Ascending")
     )
+    #TODO Filter this by Transaction Type/ Merchant
 
     # Display dataframe that users can edit
     edited_df = st.data_editor(
@@ -243,3 +244,6 @@ if uploaded_file is not None:
 
         st.markdown(f"### Transactions for {selected_date.strftime('%B %d, %Y')}")
         st.dataframe(filtered_df.sort_values("Transaction Date"))
+
+
+    #TODO - Identify areas to improve spending... where can I save money
