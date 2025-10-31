@@ -106,3 +106,7 @@ if uploaded_file is not None:
     with col5:
         net_expense = df['Amount'].sum() - venmoed_df['Amount Venmoed'].sum()
         st.metric("Net Expense", value=f"${net_expense:,.2f}")
+
+    #TODO: Plot by category type (maybe do this one)
+    #TODO: Most common merchants/places spent money (top 5/10 etc) (and this one.... in st.columns(2)) together
+    #TODO: Plot by time by month/week/ etc
