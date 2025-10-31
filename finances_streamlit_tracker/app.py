@@ -210,3 +210,36 @@ if uploaded_file is not None:
     )
 
     st.altair_chart(chart, use_container_width=True)
+
+    # --- Detect which date was clicked ---
+    selected_points = alt.selection_point(name="click")
+
+    # Unfortunately, Altair selections alone don't pass values back to Streamlit directly.
+    # We'll simulate interactivity using a Streamlit widget below 👇
+
+    # --- Manual fallback selection for Streamlit (works reliably) ---
+    selected_date = st.selectbox(
+        f"Select a {agg_option[:-2]} to view transactions:",
+        options=sorted(time_spend["Transaction Date"].dt.date.unique()),
+    )
+
+    # --- Filter transactions for that date range ---
+    if selected_date:
+        if freq == "D":
+            filtered_df = edited_df[edited_df["Transaction Date"].dt.date == selected_date]
+        elif freq == "W":
+            # Get the week start and end for the selected date
+            start = pd.to_datetime(selected_date) - pd.offsets.Week(weekday=6)
+            end = start + pd.offsets.Week()
+            filtered_df = edited_df[
+                (edited_df["Transaction Date"] >= start) & (edited_df["Transaction Date"] < end)
+            ]
+        elif freq == "M":
+            start = pd.to_datetime(selected_date).replace(day=1)
+            end = (start + pd.offsets.MonthEnd(1))
+            filtered_df = edited_df[
+                (edited_df["Transaction Date"] >= start) & (edited_df["Transaction Date"] <= end)
+            ]
+
+        st.markdown(f"### Transactions for {selected_date.strftime('%B %d, %Y')}")
+        st.dataframe(filtered_df.sort_values("Transaction Date"))
