@@ -109,10 +109,6 @@ if uploaded_file is not None:
         net_expense = df['Amount'].sum() - venmoed_df['Amount Venmoed'].sum()
         st.metric("Net Expense", value=f"${net_expense:,.2f}")
 
-    #TODO: Plot by category type (maybe do this one)
-    #TODO: Most common merchants/places spent money (top 5/10 etc) (and this one.... in st.columns(2)) together
-    #TODO: Plot by time by month/week/ etc
-
     # Begin the Plots to look at spending
     st.write()
     st.header("Spending Overview")
@@ -165,3 +161,52 @@ if uploaded_file is not None:
             .properties(height=400)
         )
         st.altair_chart(chart2, use_container_width=True)
+
+    st.write()
+    st.write()
+
+    # Plotting expenses over time 
+    st.subheader("Spending Overview")
+    
+    # --- User selects aggregation level ---
+    agg_option = st.radio(
+        "Aggregate spending by:",
+        ("Daily", "Weekly", "Monthly"),
+        horizontal=True
+    )
+
+    # --- Map selection to Pandas resample codes ---
+    resample_map = {
+        "Daily": "D",
+        "Weekly": "W",
+        "Monthly": "M"
+    }
+
+    # --- Aggregate accordingly ---
+    freq = resample_map[agg_option]
+    time_spend = (
+        edited_df
+        .set_index("Transaction Date")
+        .resample(freq)["Amount"]
+        .sum()
+        .reset_index()
+    )
+
+    # --- Altair Line Chart ---
+    chart = (
+        alt.Chart(time_spend)
+        .mark_line(point=alt.OverlayMarkDef(filled=True, size=60))
+        .encode(
+            x=alt.X("Transaction Date:T", title=agg_option, axis=alt.Axis(format="%b %d, %Y")),
+            y=alt.Y("Amount:Q", title="Total Spent ($)"),
+            tooltip=[
+                alt.Tooltip("Transaction Date:T", title=agg_option),
+                alt.Tooltip("Amount:Q", format="$.2f", title="Total Spent"),
+            ],
+            color=alt.value("#0078D4")  # Streamlit blue
+        )
+        .properties(height=400)
+        .interactive()
+    )
+
+    st.altair_chart(chart, use_container_width=True)
