@@ -1,12 +1,6 @@
-# Before uploading CC Statement... add Columns:
-# Account - str (last 4 digits of card) and Statement - Date of the CC Statement
-
-cc_categories = ['Bills & Utilities', 'Food & Drink', 'Entertainment', 'Shopping',
-                    'Personal', 'Groceries', 'Gas', 'Money out', 'Health & Wellness',
-                    'Travel', 'Automotive', 'Fees & Adjustments']
-
 import streamlit as st
 import pandas as pd
+from constants import cc_categories
 
 st.set_page_config(
     page_title="Credit Card Dashboard",  # Tab name
@@ -64,6 +58,10 @@ if uploaded_file is not None:
     },
     hide_index=True, use_container_width=True
 )
+    # Note under the table
+    st.markdown("**Note:** Possible categories for transactions include:")
+    st.markdown("• " + "\n• ".join(cc_categories))
+    st.divider() 
     
     
     edited_df["Amount Venmoed"] = edited_df["Amount"] * (edited_df["Split Count"] - 1) / edited_df["Split Count"]
@@ -87,24 +85,24 @@ if uploaded_file is not None:
             use_container_width=True,
         )
 
-    # Note under the table
 
-    st.markdown("**Note:** Possible categories for transactions include:")
-    st.markdown("• " + "\n• ".join(cc_categories))
 
     st.divider() 
     st.write("")  
 
     # Begin some Metrics
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
         st.metric("Number of Purchases", len(edited_df))
     with col2:
         st.metric("Sum of Transactions", f"${df['Amount'].sum():,.2f}")
     with col3:
-        
         num_venmoed = edited_df["Was Venmoed"].sum()
-
         # Display the metric
         st.metric("Number of Purchases Venmoed For", value=int(num_venmoed))
+    with col4:
+        st.metric("Sum of Venmo", value=f"${venmoed_df['Amount Venmoed'].sum():,.2f}")
+    with col5:
+        net_expense = df['Amount'].sum() - venmoed_df['Amount Venmoed'].sum()
+        st.metric("Net Expense", value=f"${net_expense:,.2f}")
