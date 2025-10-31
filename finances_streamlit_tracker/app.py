@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import altair as alt
 from constants import cc_categories
 
 st.set_page_config(
@@ -110,3 +112,56 @@ if uploaded_file is not None:
     #TODO: Plot by category type (maybe do this one)
     #TODO: Most common merchants/places spent money (top 5/10 etc) (and this one.... in st.columns(2)) together
     #TODO: Plot by time by month/week/ etc
+
+    # Begin the Plots to look at spending
+    st.write()
+    st.header("Spending Overview")
+
+    col1,col2 = st.columns(2)
+
+    # --- Plot 1: Spending by Category (Vertical) ---
+    with col1:
+        st.markdown("### Spending by Category")
+        category_spend = (
+            edited_df.groupby("Category")["Amount"]
+            .sum()
+            .reset_index()
+            .sort_values(by="Amount", ascending=False)
+            .head(10)
+        )
+
+        chart1 = (
+            alt.Chart(category_spend)
+            .mark_bar(cornerRadiusTopLeft=5, cornerRadiusTopRight=5)
+            .encode(
+                x=alt.X("Category:N", sort="-y", title="Category"),
+                y=alt.Y("Amount:Q", title="Total Spent ($)"),
+                tooltip=["Category", alt.Tooltip("Amount:Q", format="$.2f")]
+            )
+            .properties(height=400)
+            .configure_axis(labelAngle=-30)
+        )
+        st.altair_chart(chart1, use_container_width=True)
+
+    # --- Plot 2: Top Merchants/Places Spent (Horizontal) ---
+    with col2:
+        st.markdown("### Top Merchants / Places Spent")
+        merchant_spend = (
+            edited_df.groupby("Description")["Amount"]
+            .sum()
+            .reset_index()
+            .sort_values(by="Amount", ascending=False)
+            .head(10)
+        )
+
+        chart2 = (
+            alt.Chart(merchant_spend)
+            .mark_bar(cornerRadiusTopLeft=5, cornerRadiusBottomLeft=5)
+            .encode(
+                y=alt.Y("Description:N", sort="-x", title="Merchant / Place"),
+                x=alt.X("Amount:Q", title="Total Spent ($)"),
+                tooltip=["Description", alt.Tooltip("Amount:Q", format="$.2f")]
+            )
+            .properties(height=400)
+        )
+        st.altair_chart(chart2, use_container_width=True)
