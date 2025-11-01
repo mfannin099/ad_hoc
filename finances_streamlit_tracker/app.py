@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import altair as alt
 from constants import cc_categories
+from utils import clean_df
 
 st.set_page_config(
     page_title="Credit Card Dashboard",  # Tab name
@@ -19,14 +20,8 @@ if uploaded_file is not None:
     
     st.subheader("✅ File Uploaded Successfully!")
 
-    # Simple Manupulation of Dataframe
-    df = df[df['Type'] == "Sale"]
-    df["Transaction Date"] = pd.to_datetime(df["Transaction Date"], errors="coerce")
-    df['Amount'] = df['Amount'].abs()
-    df['Was Venmoed'] = ' '
-    df["Split Count"] = df.get("Split Count", 1)
-
-    # End Manupulation of dataset
+    # Clean df function
+    df = clean_df(df)
 
     # Allow User to pick how data is sorted
     sort_options = [col for col in ["Category", "Amount", "Transaction Date"] if col in df.columns]
@@ -39,11 +34,23 @@ if uploaded_file is not None:
         by=sort_by,
         ascending=(sort_order == "Ascending")
     )
-    #TODO Filter this by Transaction Type/ Merchant
+
+    # --- Description (Merchant) Filter --- (Creating the filter)
+    descriptions = df["Description"].dropna().unique()
+    with st.sidebar:
+        st.header("Filters")
+        selected_merchants = st.multiselect(
+            "Select Merchant(s):",
+            options=sorted(descriptions),
+            default=descriptions  # all selected by default
+        )
+        
+    #Actually filtering the df
+    filtered_df = df[(df["Description"].isin(selected_merchants))]
 
     # Display dataframe that users can edit
     edited_df = st.data_editor(
-    df,
+    filtered_df,
     column_config={
         "Was Venmoed": st.column_config.CheckboxColumn(
             "Was Venmoed",
