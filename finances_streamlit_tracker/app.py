@@ -95,8 +95,6 @@ if uploaded_file is not None:
             use_container_width=True,
         )
 
-
-
     st.divider() 
     st.write("")  
 
