@@ -3,4 +3,4 @@ google_books_api/.env
 google_books_api/book_env
 .venv/
 data/
-finance_streamlit_tracker/.env
+finances_streamlit_tracker/.env
