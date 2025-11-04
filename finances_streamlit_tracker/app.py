@@ -119,7 +119,7 @@ if uploaded_file is not None:
     st.write()
     st.header("Spending Overview")
 
-    col1,col2 = st.columns(2)
+    col1,col2, col3 = st.columns(3)
 
     # --- Plot 1: Spending by Category (Vertical) ---
     with col1:
@@ -147,7 +147,7 @@ if uploaded_file is not None:
 
     # --- Plot 2: Top Merchants/Places Spent (Horizontal) ---
     with col2:
-        st.markdown("### Top Merchants / Places Spent")
+        st.markdown("### Top Merchants by Spent")
         merchant_spend = (
             edited_df.groupby("Description")["Amount"]
             .sum()
@@ -167,6 +167,30 @@ if uploaded_file is not None:
             .properties(height=400)
         )
         st.altair_chart(chart2, use_container_width=True)
+
+    # --- Plot 3: Most Frequent Merchants (Vertical) ---
+    with col3:
+        st.markdown("### Most Frequent Merchants")
+        merchant_freq = (
+            edited_df.groupby("Description")["Amount"]
+            .count()  # count number of transactions per merchant
+            .reset_index(name="Transaction Count")
+            .sort_values(by="Transaction Count", ascending=False)
+            .head(10)
+        )
+
+        chart3 = (
+            alt.Chart(merchant_freq)
+            .mark_bar(cornerRadiusTopLeft=5, cornerRadiusTopRight=5, color="#6baed6")
+            .encode(
+                x=alt.X("Description:N", sort="-y", title="Merchant / Place"),
+                y=alt.Y("Transaction Count:Q", title="Number of Transactions"),
+                tooltip=["Description", "Transaction Count"]
+            )
+            .properties(height=400)
+        )
+
+        st.altair_chart(chart3, use_container_width=True)
 
     st.write()
     st.write()
