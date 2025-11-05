@@ -2,6 +2,7 @@ import pandas as pd
 
 
 def clean_df(df):
+    df = df[df['Type'] == "Sale"].copy() 
 
     # Simple Manupulation of Dataframe
     df = df[df['Type'] == "Sale"]

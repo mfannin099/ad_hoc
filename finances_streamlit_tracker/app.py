@@ -14,6 +14,11 @@ st.set_page_config(
 st.title("Credit Card Statement Dashboard")
 
 uploaded_file = st.file_uploader("Choose a CSV file - Credit Card Statement", type=["csv"])
+st.info(
+    "📄 **Expected CSV Columns:** Transaction Date, Post Date, Description, Category, Type, Amount",
+    icon="ℹ️"
+)
+
 if uploaded_file is not None:
     # Read the file into a pandas DataFrame
     df = pd.read_csv(uploaded_file)
