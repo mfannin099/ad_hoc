@@ -293,7 +293,7 @@ if uploaded_file is not None:
         "📆 Minimum number of months to qualify as a recurring merchant",
         min_value=1,
         max_value=12,
-        value=3,  # default
+        value=6,  # default
         step=1,
         help="Merchants appearing at least this many months will be flagged as recurring."
         )
